@@ -44,7 +44,7 @@ class Cookie{
 	* 
 	* @var timestamp
 	*/
-	public $_expire 	= 0;
+	public $_expire 	= COOKIE_EXPIRE;
 
 	/**
 	* Путь к директории на сервере, из которой будут доступны cookie.
@@ -55,7 +55,7 @@ class Cookie{
 	*  
 	* @var string
 	*/
-	public $_path 		= '/';
+	public $_path 		= COOKIE_PATH;
 
 	/**
 	* Домен, которому доступны cookie.
@@ -66,7 +66,7 @@ class Cookie{
 	* 
 	* @var string
 	*/
-	public $_domain 	= '';
+	public $_domain 	= COOKIE_DOMAIN;
 
 	/**
 	* Указывает на то, что значение cookie должно передаваться

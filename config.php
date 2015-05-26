@@ -19,12 +19,18 @@ define('DB_PASSWORD', '');
 define('DB_DSN', 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';charset='.CHARSET.';');
 
 define('COOKIE_NAME', 'mySCripCookie');
-define('COOKIE_EXPIRE', time()+60*100);
+define('COOKIE_EXPIRE', time()+24*60*60*2);
 define('COOKIE_PATH', '/');
 define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST'] );
+define('COOKIE_SECURE', FALSE );
+define('COOKIE_HTTPOLY', TRUE );
 
 define('IMAGES_PATH', 'upload/' );
 
+function __autoload ($class_name) {
+	require_once 'class/'.$class_name.'.class.php';
+}
+/*
 	require_once 'class/Error.class.php';
 	require_once 'class/Cookie.class.php';
 	require_once 'class/DB.class.php';
@@ -32,4 +38,4 @@ define('IMAGES_PATH', 'upload/' );
 	require_once 'class/User.class.php';
 	require_once 'class/newUser.class.php';
 	require_once 'class/validateData.class.php';
-
+*/
