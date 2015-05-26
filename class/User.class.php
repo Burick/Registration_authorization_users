@@ -113,11 +113,13 @@ class User {
 		return  $this->_DB->executeSQL($sql);
 	}
 	public function userLogOut() {
+/*
 		$this->_COOKIE->_value = '';
 		$this->_COOKIE->_expire = time() - 3600;
 		$this->_COOKIE->_path = COOKIE_PATH;
 		$this->_COOKIE->_domain = COOKIE_DOMAIN;        
 		$this->_COOKIE->save();
+*/      $his->_COOKIE->delete();
 		session_unset($_SESSION);
 		return session_destroy();
 		
