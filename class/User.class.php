@@ -119,7 +119,7 @@ class User {
 		$this->_COOKIE->_path = COOKIE_PATH;
 		$this->_COOKIE->_domain = COOKIE_DOMAIN;        
 		$this->_COOKIE->save();
-*/      $his->_COOKIE->delete();
+*/      $this->_COOKIE->delete();
 		session_unset($_SESSION);
 		return session_destroy();
 		
