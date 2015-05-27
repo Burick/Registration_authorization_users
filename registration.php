@@ -1,4 +1,5 @@
 <?php
+
 require_once 'config.php';
 
 $data_error = ''; 
@@ -20,7 +21,7 @@ if( isset($_SESSION['post']) ){
 	unset($_SESSION['post']);
 }
 
-
+// если была отравка формы то пытаемся авторизоваться
 if(isset($_POST['submit'])){
 	$valid_post = new validateData();
 	$post           = $valid_post->trimArray($_POST);
@@ -32,7 +33,7 @@ if(isset($_POST['submit'])){
 	$email          = $valid_post->filterEmail( ($post['email'] ) ? $post['email'] : '' );
 	$date           = $valid_post->filterDate( $post['date'], false );  
 	$sex            = $valid_post->filterSex( ($post['sex'] ) ? $post['sex'] : '' );   
-
+	// загрузка юзерпика
 	$UPLOAD = new fileUpload('file');
 	if( $_FILES && ( $upload_error = $UPLOAD->getError('', '') ) ){
 		$valid_post->addErrorMessage($upload_error, '', '');
@@ -40,23 +41,25 @@ if(isset($_POST['submit'])){
 		$userpic = $UPLOAD->_uploaded[0]; 
 	} 	
 
-
+	// если есть ошибки то идем на форму регистрации
 	if( $valid_post->getErrorMessage('<div class = "alert alert-danger" >') ){
+		@unlink($userpic);
 		$_SESSION['error_message'] = $valid_post->getErrorMessage('<div class = "alert alert-danger" >');
 		$_SESSION['post'] = $post;
 		header('Location:'.$_SERVER['PHP_SELF']); exit; 
 	}
 
-
+	//  регистрируем нового юзера
 	$newUser = NewUser::getInstance();
 	$newUser->setNewUser($login, '', $pass, $email, $date, $sex, $userpic);
 	if(!$user = $newUser->addNewUser()){
-		unlink($userpic);
+		// если неудача то идем на форму регистрации
+		@unlink($userpic);
 		$_SESSION['error_message'] = $newUser->getErrorMessage('<div class = "alert alert-danger" >');
 		$_SESSION['post'] = $post; 
 		header('Location:'.$_SERVER['PHP_SELF']); exit();
 	}else{
-
+		// идем на вход, и заходим через COOKIE
 		$_SESSION['user'] = $user;
 		header('Location:login.php'); exit();
 

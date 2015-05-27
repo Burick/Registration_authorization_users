@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 
+// Логаут юзера
 if( isset($_GET['auth']) && $_GET['auth'] == 'logout' ){
 	
 	$USER = User::getInstance();
@@ -8,22 +9,25 @@ if( isset($_GET['auth']) && $_GET['auth'] == 'logout' ){
 	header('Location:login.php'); exit;
 }
 
+// если сессия открыта то идем на страницу профиля
 if(isset($_SESSION['user'])){
 	header('Location:profile.php'); exit;
 }
 
+// если есть ошибки при входе показываем
 $data_error = ''; 
 if( isset($_SESSION['error_message']) ){
 	$data_error = $_SESSION['error_message'];
 	unset( $_SESSION['error_message'] ); 
 }
+// автозаполнение при неправильной авторизации
 if( isset($_SESSION['post']) ){
 	$login = $_SESSION['post']['login'];
 	$pass = $_SESSION['post']['pass'];
 	unset($_SESSION['post']);
 }
 
-
+// COOKIE то авторизовуеся через них
 if(isset($_COOKIE[COOKIE_NAME])){
 	$USER = User::getInstance();
 	$user = $USER->userCookieLogIn($_COOKIE[COOKIE_NAME]);
@@ -33,23 +37,29 @@ if(isset($_COOKIE[COOKIE_NAME])){
 	}
 }
 
-
+// если отправлена форма то пытаемся войти
 if(isset($_POST['submit'])){
 	$valid_post     = new validateData();
 	$post           = $valid_post->trimArray($_POST);
 	$login          = $valid_post->filterLogin( ( isset($post['login']) ) ? $post['login'] : '' );
 	$pass           = $valid_post->filterPass( ( isset($post['pass']) ) ? $post['pass'] : '' );
+	// если есть ошибки то показываем
 	if( $valid_post->getErrorMessage('<div class = "alert alert-danger" >') ){
 		$data_error = $valid_post->getErrorMessage('<div class = "alert alert-danger" >');
 		extract($post); 
 	}else{
+		// если введенные данные корректны то пытаемся войти
 		$USER = User::getInstance();
 		if( !$user = $USER->userLogIn($login, $pass) ){
+			// если такой пары логин-пароль нет то показываем ошибку и форму ф\входа
 			$_SESSION['post'] = $post;
 			$_SESSION['error_message'] = $USER->getErrorMessage('<div class = "alert alert-danger" >');
 			if(isset($_SESSION['user']))unset($_SESSION['user']);
 			header('Location:'.$_SERVER['PHP_SELF']); exit;
 		}else{
+			// если авторизация прошла нормально то заходим по COOKIE
+			// можно сделать предупреждение если COOKIE баузером не принимаются
+			// или можно авторизовать юзера без них
 			//$_SESSION['user'] = $user;
 			//header('Location:profile.php'); exit;
 			header('Location:'.$_SERVER['PHP_SELF']); exit;
@@ -57,9 +67,6 @@ if(isset($_POST['submit'])){
 	}  	
 
 }
-
-
-
 
 ?><!DOCTYPE html>
 <html lang="ru">
