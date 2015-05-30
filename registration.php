@@ -54,7 +54,7 @@ if(isset($_POST['submit'])){
 
 	//  регистрируем нового юзера
 	$newUser = newUser::getInstance();
-	$newUser->setNewUser($login, '', $pass, $email, $date, $sex, $userpic);
+	$newUser->setNewUser($login, $name, $pass, $email, $date, $sex, $userpic);
 	if(!$user = $newUser->addNewUser()){
 		// если неудача то идем на форму регистрации
 		@unlink($userpic);

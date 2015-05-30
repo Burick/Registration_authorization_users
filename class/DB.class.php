@@ -111,15 +111,17 @@ class DB{
 	/**.
 	* исполнение запроса
 	* @param mixed $sql
+	* @return bool
 	*/
 	public function executeSQL($sql='') {
 		try{
 			$sth = self::prepare($sql);
-			return $sth->execute();
+			$sth->execute(); 
 		}catch(PDOException $e){
 			echo 'ERROR '.$e->getMessage();
 			return false;
-		}    
+		}
+		return $sth;    
 	}   
 } // class DB
 

@@ -39,7 +39,7 @@ if(isset($_SESSION['user'])){
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-6">
-									<div class="user_pic"><img class="img-responsive" src="<?=(isset($profile_pic) && $profile_pic)? $profile_pic: 'nophoto.jpg' ?>" alt="" /></div>
+									<div class="user_pic"><img class="img-responsive" src="<?=(isset($profile_pic) && $profile_pic)? $profile_pic: IMAGES_PATH.'nophoto.jpg' ?>" alt="" /></div>
 									<div><?=(isset($profile_pic) && $profile_pic == '' )? '<p class="load"><span class="glyphicon glyphicon-cloud-upload"></span> <button type="button" class="btn btn-sm btn-warning">загрузить фото</button></p>' : ''?></div>   
 								</div>
 								<div class="col-sm-6">
