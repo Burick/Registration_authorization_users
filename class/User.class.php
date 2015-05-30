@@ -93,8 +93,11 @@ class User {
 	* @param mixed $user_id
 	* @param String $pic
 	*/
-	public function addUserPic ($user_id = null, $pic = null) {
-		$sql = "INSERT INTO `user_pic` (`user_id`, `pic`) VALUES ('$user_id', $pic')";
+	public function updateUserPic ($user_id = null, $pic = null) {
+		$sql = "UPDATE user_pic 
+		SET `pic` = '$pic' 
+		WHERE `user_id` = '$user_id'
+		";
 		return $this->_DB->executeSQL($sql);   
 	}
 	/**

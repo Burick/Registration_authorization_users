@@ -1,4 +1,4 @@
-<?php
+<?php  error_reporting(E_ALL ^ E_NOTICE);
 session_start();
 /**
 * Файл настроек
@@ -19,10 +19,27 @@ define('COOKIE_SECURE', FALSE );
 define('COOKIE_HTTPOLY', TRUE );
 // Папка для загрузки картинок
 define('IMAGES_PATH', 'upload/' );
+define('IMAGES_MAXSIZE', 512000 );
 
 function __autoload ($class_name) {
 	require_once 'class/'.$class_name.'.class.php';
 }
+
+
+function cookieLogin() {
+  // COOKIE то авторизовуеся через них
+  if(isset($_COOKIE[COOKIE_NAME])){
+	  $USER = User::getInstance();
+	  $user = $USER->userCookieLogIn($_COOKIE[COOKIE_NAME]);
+	  if($user){
+		  $_SESSION['user'] = $user;
+		  header('Location:profile.php'); exit;       
+	  }
+  } 
+}
+
+
+
 /*
 	require_once 'class/Error.class.php';
 	require_once 'class/Cookie.class.php';

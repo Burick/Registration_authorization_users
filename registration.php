@@ -181,7 +181,7 @@ if(isset($_POST['submit'])){
 								</div>
 
 								<div class="form-group">
-									<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание</span>
+									<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер <?= IMAGES_MAXSIZE ?>b</span>
 									<div class="input-group">
 										<span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span><input type="file" accept="image/jpeg, image/png, image/gif" name="file" value="<?=isset($file)? $file : '' ?>" class="form-control" id="date" tabindex="7" >
 									</div>

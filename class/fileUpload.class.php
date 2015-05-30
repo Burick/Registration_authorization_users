@@ -22,7 +22,7 @@ class fileUpload{
 
 	public $_rename 		= true;
 	public $_allowed_type 	= array('jpg'=>'image/jpeg','png' =>'image/png','gif' =>'image/gif');
-	public $_allowed_size 	= 512000;
+	public $_allowed_size 	= IMAGES_MAXSIZE;
 	public $_field_name;
 	public $_upload_dir 	= IMAGES_PATH;
 	public $_uploaded 		= array();

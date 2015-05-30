@@ -26,17 +26,8 @@ if( isset($_SESSION['post']) ){
 	$pass = $_SESSION['post']['pass'];
 	unset($_SESSION['post']);
 }
-
-// COOKIE то авторизовуеся через них
-if(isset($_COOKIE[COOKIE_NAME])){
-	$USER = User::getInstance();
-	$user = $USER->userCookieLogIn($_COOKIE[COOKIE_NAME]);
-	if($user){
-		$_SESSION['user'] = $user;
-		header('Location:profile.php'); exit;       
-	}
-}
-
+// если есть COOKIE то авторизовуеся через них
+cookieLogin();
 // если отправлена форма то пытаемся войти
 if(isset($_POST['submit'])){
 	$valid_post     = new validateData();
@@ -64,7 +55,7 @@ if(isset($_POST['submit'])){
 			//header('Location:profile.php'); exit;
 			header('Location:'.$_SERVER['PHP_SELF']); exit;
 		}
-	}  	
+	}      
 
 }
 
@@ -97,7 +88,7 @@ if(isset($_POST['submit'])){
 								Введите логин и пароль указанные при регистрации, чтобы продолжить работу с сервисом или <a href="registration.php" class="registration_link">зарегистрируйтесь</a>
 							</div>
 							<div class="panel-body">
-								<legend>Вход</legend>
+								<p class="legend">Вход</p>
 								<div class="form-group">
 									<label for="login">Логин</label>
 									<div class="input-group">
