@@ -1,22 +1,22 @@
 <?php
-/*Class to MySQL connect via PDO library
-
-* need file config.php to define the constants DB_NAME, DB_HOST, DB_USER and 
-* DB_PASSWORD
-*   
+/**
+* Class для соединения с базой MySQL через PDO библиотеку
+* должен быть файл config.php
+* с установленными константами
+* DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, CHARSET
 */
 
 class DB{
 	/**
-	Singleton instance
-	@var DB 
-	**/
+	* Singleton instance
+	* @var DB
+	*/
 	private static $instance;
 
 	/**
-	Conection with database
-	@var PDO
-	**/
+	*Соединение с базой
+	* @var PDO 
+	*/
 	private static $connection;
 
 	public $_DB_OPTIONS = array(
@@ -25,18 +25,21 @@ class DB{
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES "UTF8"'
 	);    
 	/**
-	Constructor  private of singleton class
-	**/
+	* приватный конструктор Singelton
+	*/
 	private function __construct() {
-		self::$connection = new PDO('mysql:dbname='.DB_NAME.';host='.DB_HOST.';charset='.CHARSET.';', DB_USER, DB_PASSWORD, $this->_DB_OPTIONS);
-//		self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//		self::$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+		try{
+			self::$connection = new PDO(DB_DSN, DB_USER, DB_PASSWORD, $this->_DB_OPTIONS);  
+		}catch(PDOException $e){
+			echo 'ошибка соеднения с базой';
+		}
+
 	}
 
 	/**
-	get instance of class Connection
-	@return type
-	**/
+	*возвращает инстанс класса DB 
+	* @return DB
+	*/
 	public static function getInstance(){
 		if(empty(self::$instance)){
 			self::$instance = new DB();
@@ -45,86 +48,69 @@ class DB{
 	}
 
 	/**
-	Return a connection PDO with database
-	@return PDO
-	**/
+	* возвращает соединение PDO с базой
+	* @return PDO
+	*/
 	public static function getConn(){
 		self::getInstance();
 		return self::$connection;
 	}
 
 	/**
-	Prepare the SQL to execute
-	@param String $sql
-	@return PDOStatment stmt
-	**/
+	* Подготавливает SQL к исполнению
+	* @param String $sql
+	* @return PDOStatment stmt
+	*/
 	public static function prepare($sql){
 		return self::getConn()->prepare($sql);
 	}
 
 	/**
-	Retur the id of last search INSERT
-	@return int
-	**/
+	* возвращает id последнего INSERT
+	* @return int
+	*/
 	public static function lastInsertId(){
 		return self::getConn()->lastInsertId();
 	}
 
 	/**
-	start of trasaction
-	@return bol
-	**/
+	* начало транзакции
+	* @return bool
+	*/
 	public static function beginTransaction(){
 		return self::getConn()->beginTransaction();
 	}
 
 	/**
-	commit of transaction
-	@return bol 
-	**/
+	* выполнение транзакции
+	* @return bool
+	*/
 	public static function commit(){
 		return self::getConn()->commit();
 	}
 
 	/**
-	rollback of transaction
-	@return bool
-	**/
+	* отмена транзакции
+	* @return bool
+	*/
 	public static function rollback(){
 		return self::getConn()->rollback();
 	}
-
-	/**
-	format date to MySQL (05/12/2015 to 2015-12-05)
-	@param type $date
-	@return type
-	**/
-	public static function dateToMySql($date){
-		return implode('-', array_reverse(explode('/', $date)));
-	}
-
-	/**
-	Format date from MySQL (2015-12-05 to 05/12/2015)
-	@param type $date
-	@return type 
-	**/
-	public static function dateFromMySql($date){
-		return implode('/', array_reverse(explode('-', $date)));
-	}
 	
-	/**
-	* put your comment there...
-	* 
+	/**.
+	* исполнение запроса
 	* @param mixed $sql
+	* @return bool
 	*/
-	 public function executeSQL($sql='') {
+	public function executeSQL($sql='') {
 		try{
 			$sth = self::prepare($sql);
-			$sth->execute();
+			$sth->execute(); 
 		}catch(PDOException $e){
-			return $e->getMessage();
-		}    
-		return  $sth;
+			echo 'Ошибка при выполнении запроса к базе';
+			return false;
+		}
+		return $sth;    
 	}   
 } // class DB
 
