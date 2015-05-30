@@ -114,6 +114,17 @@ function langTrigger(lang) {
             'EN': 'login may contain large and small letters and numbers, be sure to start with the letter'
 
         },
+
+        'name_label': {
+            'RU': 'Имя',
+            'EN': 'Name'
+
+        },
+        'name_text': {
+            'RU': 'имя может содержать большие и маленькие буквы латиницей и кириллицей',
+            'EN': 'login may contain large and small latin and cyrilik letters'
+
+        },
         'pass_label': {
             'RU': 'Пароль',
             'EN': 'Password'
@@ -159,10 +170,18 @@ function langTrigger(lang) {
             'EN': 'Female'
 
         },
+        'upload_label': {
+            'RU': 'Загрузить фото',
+            'EN': 'Upload photo'
+
+        },
+        'upload_text': {
+            'RU': 'файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер',
+            'EN': 'file *.jpg, *.gif, *.png - the file name may contain Latin letters, numbers, and underscores, maximum size'
+        },
         'foter_button': {
             'RU': 'Отправить данные',
             'EN': 'Sing Up'
-
         },
         'footer_string1': {
             'RU': 'ИЛИ',
@@ -176,6 +195,10 @@ function langTrigger(lang) {
             'RU': 'Введите логин',
             'EN': 'Enter your login'
         },
+        'placeholder_name': {
+            'RU': 'Введите имя',
+            'EN': 'Enter your name'
+        },        
         'placeholder_pass': {
             'RU': 'Введите пароль',
             'EN': 'Enter password'

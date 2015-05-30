@@ -1,4 +1,5 @@
 <?php
+
 require_once 'config.php';
 
 $data_error = ''; 
@@ -20,7 +21,7 @@ if( isset($_SESSION['post']) ){
 	unset($_SESSION['post']);
 }
 
-
+// если была отравка формы то пытаемся авторизоваться
 if(isset($_POST['submit'])){
 	$valid_post = new validateData();
 	$post           = $valid_post->trimArray($_POST);
@@ -32,42 +33,41 @@ if(isset($_POST['submit'])){
 	$email          = $valid_post->filterEmail( ($post['email'] ) ? $post['email'] : '' );
 	$date           = $valid_post->filterDate( $post['date'], false );  
 	$sex            = $valid_post->filterSex( ($post['sex'] ) ? $post['sex'] : '' );   
+	// загрузка юзерпика
+	if($_FILES && $_FILES['file']['name']){
+		$UPLOAD = new fileUpload('file');
+		if( $upload_error = $UPLOAD->getError('', '') ){
+			$valid_post->addErrorMessage($upload_error, '', '');
+		}else{
+			$userpic = $UPLOAD->_uploaded[0]; 
+		}        
+	}
 
-	$UPLOAD = new fileUpload('file');
-	if( $_FILES && ( $upload_error = $UPLOAD->getError('', '') ) ){
-		$valid_post->addErrorMessage($upload_error, '', '');
-	}else{
-		$userpic = $UPLOAD->_uploaded[0]; 
-	} 	
 
-
+	// если есть ошибки то идем на форму регистрации
 	if( $valid_post->getErrorMessage('<div class = "alert alert-danger" >') ){
+		@unlink($userpic);
 		$_SESSION['error_message'] = $valid_post->getErrorMessage('<div class = "alert alert-danger" >');
 		$_SESSION['post'] = $post;
 		header('Location:'.$_SERVER['PHP_SELF']); exit; 
 	}
 
-
-	$newUser = NewUser::getInstance();
-	$newUser->setNewUser($login, '', $pass, $email, $date, $sex, $userpic);
+	//  регистрируем нового юзера
+	$newUser = newUser::getInstance();
+	$newUser->setNewUser($login, $name, $pass, $email, $date, $sex, $userpic);
 	if(!$user = $newUser->addNewUser()){
-		unlink($userpic);
+		// если неудача то идем на форму регистрации
+		@unlink($userpic);
 		$_SESSION['error_message'] = $newUser->getErrorMessage('<div class = "alert alert-danger" >');
 		$_SESSION['post'] = $post; 
 		header('Location:'.$_SERVER['PHP_SELF']); exit();
 	}else{
-
+		// идем на вход, и заходим через COOKIE
 		$_SESSION['user'] = $user;
 		header('Location:login.php'); exit();
 
 	}
-
-
-
-
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -123,7 +123,7 @@ if(isset($_POST['submit'])){
 								<div class="form-group">
 									<label for="name">Имя&nbsp;</label><span class="example">имя может содержать большие и маленькие буквы латиницей и кириллицей</span>
 									<div class="input-group">
-										<span class="input-group-addon"><span class="glyphicon glyphicon-asterisk grey"></span></span><input type="text" name="name" value="<?=isset($login)? $login : '' ?>" class="form-control" id="name" placeholder="Введите имя" required="required" tabindex="2">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-asterisk grey"></span></span><input type="text" name="name" value="<?=isset($name)? $name : '' ?>" class="form-control" id="name" placeholder="Введите имя" tabindex="2">
 									</div>
 								</div>								
 
@@ -175,7 +175,7 @@ if(isset($_POST['submit'])){
 								</div>
 
 								<div class="form-group">
-									<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание</span>
+									<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер <?= IMAGES_MAXSIZE ?>b</span>
 									<div class="input-group">
 										<span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span><input type="file" accept="image/jpeg, image/png, image/gif" name="file" value="<?=isset($file)? $file : '' ?>" class="form-control" id="date" tabindex="7" >
 									</div>

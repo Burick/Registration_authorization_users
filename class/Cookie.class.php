@@ -7,12 +7,17 @@ class Cookie{
 	* нужно открыть сессию 
 	* session_start()
 	* 
-	* $cookie = new Cookie('myCOOK','cookieValue') 
-	* $coocie->save() ставим cookie
+	* @example $cookie = new Cookie('myCOOK','cookieValue') 
+	* @example $coocie->save() ставим cookie
 	* -----------------------
-	*  $cookie = new Cookie('myCOOK')  читаем cookie
+	* @example $cookie = new Cookie('myCOOK')  читаем cookie
 	*  -----------------------
-	* $cookie->delete()  удаляем cookie
+	* @example $cookie->delete()  удаляем cookie
+	* 
+	* @method __consrtact()
+	* @method save()  записывает 
+	* @method delete() удалякт
+	* @method exits()  проверяет установку
 	* 
 	*/
 
@@ -131,7 +136,8 @@ class Cookie{
 		return setcookie($this->_name, $this->_value, $this->_expire, $this->_path, $this->_domain, $this->_secure, $this->_httponly);
 	}
 	/**
-	* Удаляет cookie параметр value передается пустой  
+	* Удаляет cookie параметр value передается пустой 
+	* @return bool 
 	*/
 	public function delete(){
 		return setcookie($this->_name, '', time() - 2*24*60*60, $this->_path, $this->_domain, $this->_secure, $this->_httponly);

@@ -2,12 +2,28 @@
 require_once 'config.php';
 
 if(isset($_SESSION['user'])){
-  extract ( $_SESSION['user'], EXTR_PREFIX_ALL, $prefix = 'profile' );
-	
-}else{
-   exit(header('Location:login.php?login=false')); 
-}
+	extract ( $_SESSION['user'], EXTR_PREFIX_ALL, $prefix = 'profile' );
 
+}else{
+	header('Location:login.php?login=false'); exit(); 
+}
+// загрузка фото
+if( isset( $_POST['submit'] ) && $_POST['submit'] == 'submit' ){
+	if($_FILES && $_FILES['file']['name']){
+		$UPLOAD = new fileUpload('file');
+		if( !$data_error = $UPLOAD->getError('<div class = "alert alert-danger" >', '</div>' ) ){
+			@unlink($profile_pic);
+			$profile_pic = $UPLOAD->_uploaded[0];
+			$USER = User::getInstance();
+			if( !$USER->updateUserPic($profile_user_id, $profile_pic) ){
+				exit('<h3>Изображение не удалось загрузить!</h3>');
+			}
+			// снова авторизовуемся через COOKIE
+			cookieLogin();
+			header('Location:login.php'); exit();
+		}        
+	}
+}
 ?><!DOCTYPE html>
 <html lang="ru">
 	<head>
@@ -39,8 +55,8 @@ if(isset($_SESSION['user'])){
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-6">
-									<div class="user_pic"><img class="img-responsive" src="<?=(isset($profile_pic) && $profile_pic)? $profile_pic: 'nophoto.jpg' ?>" alt="" /></div>
-									<div><?=(isset($profile_pic) && $profile_pic == '' )? '<p class="load"><span class="glyphicon glyphicon-cloud-upload"></span> <button type="button" class="btn btn-sm btn-warning">загрузить фото</button></p>' : ''?></div>   
+									<div class="user_pic"><img class="img-responsive" src="<?=(isset($profile_pic) && $profile_pic)? $profile_pic: IMAGES_PATH.'nophoto.jpg' ?>" alt="" /></div>
+									<div><?=(isset($profile_pic) && $profile_pic == '' )? '<p class="load"><span class="glyphicon glyphicon-cloud-upload"></span> <button type="button" class="btn btn-sm btn-warning">загрузить фото</button></p>' : ''?></div> 
 								</div>
 								<div class="col-sm-6">
 									<p class="name"><span class="glyphicon glyphicon glyphicon-user"></span>Имя: <?=isset($profile_name)? $profile_name: '' ?></p>
@@ -49,7 +65,20 @@ if(isset($_SESSION['user'])){
 
 								</div>
 							</div>
+							<div class="row upload_file">
+								<?=( isset($data_error) ) ? $data_error : '' ?>        
+								<form enctype="multipart/form-data" action="<?=$_SERVER['PHP_SELF'] ?>"  method="POST" role="form">
 
+									<div class="form-group">
+										<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер <?= IMAGES_MAXSIZE ?>b</span>
+										<div class="input-group">
+											<span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span><input type="file" accept="image/jpeg, image/png, image/gif" name="file" value="<?=isset($file)? $file : '' ?>" class="form-control" id="date" tabindex="7" >
+										</div>
+									</div>                                    
+
+									<button id="" name="submit" value="submit" type="submit" class="btn btn-sm btn-warning">загрузить фото</button>
+								</form>                            
+							</div>
 						</div>
 
 						<div class="panel-footer">
@@ -61,15 +90,15 @@ if(isset($_SESSION['user'])){
 		</div>
 
 		<!--div>
-			<p><a href="http://oop.local/test_task/login.php">Логин</a></p>
-			<p><a href="http://oop.local/test_task/profile.php">Профайл</a></p>
-			<p><a href="http://oop.local/test_task/loader.php">Loader</a></p>
-			<?='<br /> <pre>' ?>
-			<?='<br />$_POST&mdash;'; print_r($_POST) ?>
-			<?='<br />$_GET&mdash;'; print_r($_GET) ?>
-			<?='<br />$_SESION&mdash;'; print_r($_SESSION) ?>
-			<?='<br />$_COOKIE&mdash;'; print_r($_COOKIE) ?>
-			<?='<br /> </pre>' ?>
+		<p><a href="http://oop.local/test_task/login.php">Логин</a></p>
+		<p><a href="http://oop.local/test_task/profile.php">Профайл</a></p>
+		<p><a href="http://oop.local/test_task/loader.php">Loader</a></p>
+		<?='<br /> <pre>' ?>
+		<?='<br />$_POST&mdash;'; print_r($_POST) ?>
+		<?='<br />$_GET&mdash;'; print_r($_GET) ?>
+		<?='<br />$_SESION&mdash;'; print_r($_SESSION) ?>
+		<?='<br />$_COOKIE&mdash;'; print_r($_COOKIE) ?>
+		<?='<br /> </pre>' ?>
 		</div-->
 		<!-- JavaScript -->
 		<script src="js/script.js"></script>
