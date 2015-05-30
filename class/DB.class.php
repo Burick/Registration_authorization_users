@@ -30,19 +30,8 @@ class DB{
 	private function __construct() {
 		try{
 			self::$connection = new PDO(DB_DSN, DB_USER, DB_PASSWORD, $this->_DB_OPTIONS);  
-		}catch(Exception $e){
-			/**
-			* @todo убрать вывод ошибок для дебага 
-			*/
-			echo 'ошибка соеднения с базой '.DB_NAME.'<br /> Хост: '.DB_HOST.'<br /> User: '.DB_USER.'<br />Pass: '.DB_PASSWORD.'<br />';
-			echo '<pre>'
-			.$e->getMessage()
-			.'<br />in File '.$e->getFile()
-			.'<br />in Lile '.$e->getLine()
-			.'<br/>Trace '.$e->getTrace()
-			.'<br />Trace as String '.$e->getTraceAsString()
-			.'</pre>----------------------------------------------<br/ ><br />';
-			return $e;
+		}catch(PDOException $e){
+			echo 'ошибка соеднения с базой';
 		}
 
 	}
@@ -118,7 +107,7 @@ class DB{
 			$sth = self::prepare($sql);
 			$sth->execute(); 
 		}catch(PDOException $e){
-			echo 'ERROR '.$e->getMessage();
+			echo 'Ошибка при выполнении запроса к базе';
 			return false;
 		}
 		return $sth;    

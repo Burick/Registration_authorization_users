@@ -7,7 +7,7 @@ if(isset($_SESSION['user'])){
 }else{
 	header('Location:login.php?login=false'); exit(); 
 }
-
+// загрузка фото
 if( isset( $_POST['submit'] ) && $_POST['submit'] == 'submit' ){
 	if($_FILES && $_FILES['file']['name']){
 		$UPLOAD = new fileUpload('file');
@@ -65,20 +65,20 @@ if( isset( $_POST['submit'] ) && $_POST['submit'] == 'submit' ){
 
 								</div>
 							</div>
- <div class="row">
-			 <?=( isset($data_error) ) ? $data_error : '' ?>        
-		<form enctype="multipart/form-data" action="<?=$_SERVER['PHP_SELF'] ?>"  method="POST" role="form">
+							<div class="row upload_file">
+								<?=( isset($data_error) ) ? $data_error : '' ?>        
+								<form enctype="multipart/form-data" action="<?=$_SERVER['PHP_SELF'] ?>"  method="POST" role="form">
 
-			<div class="form-group">
-				<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер <?= IMAGES_MAXSIZE ?>b</span>
-				<div class="input-group">
-					<span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span><input type="file" accept="image/jpeg, image/png, image/gif" name="file" value="<?=isset($file)? $file : '' ?>" class="form-control" id="date" tabindex="7" >
-				</div>
-			</div>                                    
+									<div class="form-group">
+										<label for="date">Загрузить фото&nbsp;</label><span class="example">файл *.jpg, *.gif, *.png - имя файла может содержать буквы латиницей, цифры и нижнее подчеркивание, максимальный размер <?= IMAGES_MAXSIZE ?>b</span>
+										<div class="input-group">
+											<span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span><input type="file" accept="image/jpeg, image/png, image/gif" name="file" value="<?=isset($file)? $file : '' ?>" class="form-control" id="date" tabindex="7" >
+										</div>
+									</div>                                    
 
-			<button id="" name="submit" value="submit" type="submit" class="btn btn-sm btn-warning">загрузить фото</button>
-		</form>                            
- </div>
+									<button id="" name="submit" value="submit" type="submit" class="btn btn-sm btn-warning">загрузить фото</button>
+								</form>                            
+							</div>
 						</div>
 
 						<div class="panel-footer">

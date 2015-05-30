@@ -10,7 +10,7 @@ class User {
 	protected $_browser_cookie   = null;
 	protected $_user             = null;
 	protected $_error_mesage     = null;
-	public $_COOKIE              = null;
+	public 	  $_COOKIE           = null;
 
 	final public static function getInstance()
 	{
@@ -29,16 +29,7 @@ class User {
 		try{
 			$this->_DB = DB::getInstance();  
 		}catch(Exception $e){
-			/**
-			* @TODO убрать вывод инфо для дебуга
-			*/
-			echo '<pre>'
-			.$e->getMessage()
-			.'<br />in File '.$e->getFile()
-			.'<br />in Lile '.$e->getLine()
-			.'<br/>Trace '.$e->getTrace()
-			.'<br />Trace as String '.$e->getTraceAsString()
-			.'</pre>----------------------------------------------<br/ ><br />';
+			echo 'Не удалось соединиться с базой';
 		}
 		$this->_COOKIE  = new Cookie(COOKIE_NAME);
 	}

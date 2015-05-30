@@ -25,7 +25,10 @@ function __autoload ($class_name) {
 	require_once 'class/'.$class_name.'.class.php';
 }
 
-
+/**
+* авторизация через COOKIE
+* используется в profile.php и login.php 
+*/
 function cookieLogin() {
   // COOKIE то авторизовуеся через них
   if(isset($_COOKIE[COOKIE_NAME])){

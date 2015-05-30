@@ -128,7 +128,7 @@ class newUser extends User{
 
 	/**
 	* Загрузка фото пользователя
-	* @return bool
+	* @return mixed
 	*/
 	public function uploadUserPic () {
 		$userpic = new fileUpload('file');

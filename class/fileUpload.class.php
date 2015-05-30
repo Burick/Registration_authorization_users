@@ -29,7 +29,7 @@ class fileUpload{
 
 
 	public function __destruct(){}
-	
+
 	/**
 	*  конструктор
 	* 
@@ -81,7 +81,6 @@ class fileUpload{
 			}else{
 				$this->_ERROR->addErrorMessage('нет загружаемых файлов');
 			}
-
 		}
 		if(!$this->_ERROR->getErrorMessage())  return $this->_sourse;    
 		return false;
@@ -105,7 +104,6 @@ class fileUpload{
 			}
 		}
 		return $this->_uploaded = $uploaded;
-
 	}
 
 	/**
@@ -166,13 +164,13 @@ class fileUpload{
 
 /*
 if(isset($_POST['submit'])){
-	$fileUpload =  new fileUpload ('file') ;
-	echo ( !$error = $fileUpload->getError() ) ? 'файл загружен' : $fileUpload->getError() ;    
+$fileUpload =  new fileUpload ('file') ;
+echo ( !$error = $fileUpload->getError() ) ? 'файл загружен' : $fileUpload->getError() ;    
 }
- <!--form action="<?=$_SERVER['PHP_SELF'] ?>" multiple enctype="multipart/form-data" method="post">
+<!--form action="<?=$_SERVER['PHP_SELF'] ?>" multiple enctype="multipart/form-data" method="post">
 
-	File:<input type="file" multiple accept="image/jpeg, image/png, image/gif"  name="file" />
-	<input type="submit" name="submit" value="Upload"  />
+File:<input type="file" multiple accept="image/jpeg, image/png, image/gif"  name="file" />
+<input type="submit" name="submit" value="Upload"  />
 
 </form-->
 */

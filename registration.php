@@ -67,13 +67,7 @@ if(isset($_POST['submit'])){
 		header('Location:login.php'); exit();
 
 	}
-
-
-
-
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
