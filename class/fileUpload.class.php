@@ -1,16 +1,17 @@
 <?php
-//require '../config.php';
+
 
 /**
+*  Класс  для загрузки файлов из формы
+* ипользует сборщик ошибок Error.class.php
+*
+* @example $fileUpload = new fileUpload ();
+* @example echo ( !$fileUpload->createSourse('Field_Input_Type_File_Name') ) ? $fileUpload->getError() : (!$fileUpload->upload()) ? $fileUpload->getError() : 'файл/ы загружены'  ;
+* 
+* @example $fileUpload =  new fileUpload ('Field_Input_Type_File_Name') ;
+* @example echo ( !$error = $fileUpload->getError() ) ? 'файл загружен' : $fileUpload->getError() ;
 * 
 *
-* $fileUpload = new fileUpload ();
-* echo ( !$fileUpload->createSourse('Field_Input_Type_File_Name') ) ? $fileUpload->getError() : (!$fileUpload->upload()) ? $fileUpload->getError() : 'файл/ы загружены'  ;
-* 
-* $fileUpload =  new fileUpload ('Field_Input_Type_File_Name') ;
-* echo ( !$error = $fileUpload->getError() ) ? 'файл загружен' : $fileUpload->getError() ;
-* 
-* 
 * 
 */
 
@@ -28,16 +29,33 @@ class fileUpload{
 
 
 	public function __destruct(){}
-	public function __construct($field_name = null, $upload_dir = '', $allowed_type = null, $allowed_size = null ){
+	
+	/**
+	*  конструктор
+	* 
+	* @param String $field_name
+	* @param Bool $field_name
+	* @param String $upload_dir
+	* @param Array $allowed_type
+	* @param mixed $allowed_size
+	*/
+	public function __construct($field_name = null, $rename = null, $upload_dir = '', $allowed_type = null, $allowed_size = null ){
 		$this->_ERROR = new Error();
 		if($field_name){
-			if( $this->createSourse($field_name, $upload_dir, $allowed_type, $allowed_size) ){
+			if( $this->createSourse($field_name, $rename, $upload_dir, $allowed_type, $allowed_size) ){
 				$this->upload();  
 			}
 		} 
 	}
-
-	public function createSourse ($field_name = null, $upload_dir = '', $allowed_type = null, $allowed_size = null) {
+	/**
+	* создает ресурс для дальнейшей загрузки
+	* 
+	* @param String $field_name  обязательное
+	* @param String $upload_dir
+	* @param Array $allowed_type
+	* @param mixed $allowed_size
+	*/
+	public function createSourse ($field_name = null, $rename = null, $upload_dir = '', $allowed_type = null, $allowed_size = null) {
 
 		if(!$field_name ) throw new Exception('не задан обязательный параметр - имя инпута');
 
@@ -49,10 +67,11 @@ class fileUpload{
 
 			if($_FILES[$this->_field_name]['name']){
 
+				(!$_rename)      ?: $this->_rename       = $rename;
 				(!$upload_dir) 	 ?: $this->_upload_dir 	 = $upload_dir;
 				(!$allowed_type) ?: $this->_allowed_type = $allowed_type;
 				(!$allowed_size) ?: $this->_allowed_type = $allowed_size;               
-
+				// если была множественная загрузка файлов то обработать все
 				if( is_array($_FILES[$this->_field_name]['name'] ) ){
 					$this->createSourseArray();
 				}else{
@@ -68,9 +87,14 @@ class fileUpload{
 		return false;
 	}
 
+	/**
+	* непосредственно загрузка файла
+	* 
+	*/
 	public function upload () {
 		$uploaded = array();
 		foreach($this->_sourse as $k=>$file){
+			//проверка файла
 			if(!$ext = $this->checkFile($file)) continue;
 			$file_name =  $this->_upload_dir;
 			$file_name .= ( $this->_rename) ? md5( rand().$file['name'].time() ). '.'.$ext : $file['name'] ;
@@ -84,7 +108,12 @@ class fileUpload{
 
 	}
 
-	public function checkFile ($file) {
+	/**
+	* проверка файла
+	* 
+	* @param Array $file
+	*/
+	protected function checkFile ($file) {
 		if($file['error']){
 			$this->_ERROR->addErrorMessage( $file['error'] . ' ошибка загрузки файла ' . $file['name'] );
 		}
@@ -98,6 +127,11 @@ class fileUpload{
 		return false;
 	}
 
+	/**
+	* проверка типа файла
+	* 
+	* @param Array $file
+	*/
 	public function checkMime ($file) {
 		$fi = finfo_open () ;
 		isset($file['tmp_name']) ? $finfo  = finfo_file($fi, $file['tmp_name'] , FILEINFO_MIME_TYPE) : $finfo = null ;
@@ -105,15 +139,25 @@ class fileUpload{
 		return array_search($finfo, $this->_allowed_type);
 	}
 
+	/**
+	* создание ресурса если была множественная загрузка
+	* 
+	*/
 	public function createSourseArray () {
 
 		/**
 		* @TODO доделать множественную загрузку
 		*/
 
-		return $this;
+		return false;
 	}
 
+	/**
+	* возврат ошибок
+	* 
+	* @param String $prefix
+	* @param String $suffix
+	*/
 	public function getError ( $prefix = '<div>', $suffix ='</div>') {
 		if( $this->_ERROR->getErrorMessage( $prefix, $suffix ) ) return $this->_ERROR->getErrorMessage( $prefix, $suffix ) ;
 		return false;

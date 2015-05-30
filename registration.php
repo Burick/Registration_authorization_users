@@ -34,12 +34,15 @@ if(isset($_POST['submit'])){
 	$date           = $valid_post->filterDate( $post['date'], false );  
 	$sex            = $valid_post->filterSex( ($post['sex'] ) ? $post['sex'] : '' );   
 	// загрузка юзерпика
-	$UPLOAD = new fileUpload('file');
-	if( $_FILES && ( $upload_error = $UPLOAD->getError('', '') ) ){
-		$valid_post->addErrorMessage($upload_error, '', '');
-	}else{
-		$userpic = $UPLOAD->_uploaded[0]; 
-	} 	
+	if($_FILES && $_FILES['file']['name']){
+		$UPLOAD = new fileUpload('file');
+		if( $upload_error = $UPLOAD->getError('', '') ){
+			$valid_post->addErrorMessage($upload_error, '', '');
+		}else{
+			$userpic = $UPLOAD->_uploaded[0]; 
+		}        
+	}
+
 
 	// если есть ошибки то идем на форму регистрации
 	if( $valid_post->getErrorMessage('<div class = "alert alert-danger" >') ){
@@ -50,7 +53,7 @@ if(isset($_POST['submit'])){
 	}
 
 	//  регистрируем нового юзера
-	$newUser = NewUser::getInstance();
+	$newUser = newUser::getInstance();
 	$newUser->setNewUser($login, '', $pass, $email, $date, $sex, $userpic);
 	if(!$user = $newUser->addNewUser()){
 		// если неудача то идем на форму регистрации
@@ -126,7 +129,7 @@ if(isset($_POST['submit'])){
 								<div class="form-group">
 									<label for="name">Имя&nbsp;</label><span class="example">имя может содержать большие и маленькие буквы латиницей и кириллицей</span>
 									<div class="input-group">
-										<span class="input-group-addon"><span class="glyphicon glyphicon-asterisk grey"></span></span><input type="text" name="name" value="<?=isset($login)? $login : '' ?>" class="form-control" id="name" placeholder="Введите имя" required="required" tabindex="2">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-asterisk grey"></span></span><input type="text" name="name" value="<?=isset($name)? $name : '' ?>" class="form-control" id="name" placeholder="Введите имя" tabindex="2">
 									</div>
 								</div>								
 

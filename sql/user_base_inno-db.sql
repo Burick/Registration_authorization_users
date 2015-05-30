@@ -10,12 +10,8 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Дамп структуры базы данных user_base
-CREATE DATABASE IF NOT EXISTS `user_base` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `user_base`;
-
-
 -- Дамп структуры для таблица user_base.user_info
+DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE IF NOT EXISTS `user_info` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(50) NOT NULL,
@@ -34,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 
 
 -- Дамп структуры для таблица user_base.user_pic
+DROP TABLE IF EXISTS `user_pic`;
 CREATE TABLE IF NOT EXISTS `user_pic` (
   `user_id` int(11) NOT NULL,
   `pic` varchar(255) DEFAULT NULL,
@@ -46,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `user_pic` (
 
 
 -- Дамп структуры для таблица user_base.user_session
+DROP TABLE IF EXISTS `user_session`;
 CREATE TABLE IF NOT EXISTS `user_session` (
   `user_id` int(11) NOT NULL,
   `hash` char(32) DEFAULT NULL,
